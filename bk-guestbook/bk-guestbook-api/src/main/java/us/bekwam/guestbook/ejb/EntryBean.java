@@ -15,14 +15,13 @@
  */
 package us.bekwam.guestbook.ejb;
 
-import us.bekwam.guestbook.entity.Entry;
+import us.bekwam.guestbook.domain.Entry;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -34,8 +33,10 @@ public class EntryBean {
     @PersistenceContext
     EntityManager em;
 
-    public List<Entry> getEntries(int page) {
+    public List<Entry> getEntries(int page, int nrecs) {
         TypedQuery<Entry> q = em.createQuery("SELECT e FROM Entry e ORDER BY e.createdOn DESC", Entry.class );
+        q.setFirstResult(page-1);
+        q.setMaxResults(nrecs);
         return q.getResultList();
     }
 

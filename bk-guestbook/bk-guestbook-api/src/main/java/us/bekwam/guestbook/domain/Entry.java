@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package us.bekwam.guestbook.entity;
+package us.bekwam.guestbook.domain;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
@@ -32,7 +32,8 @@ public class Entry {
     private String text;
     private String createdBy;
     private ZonedDateTime createdOn;
-    private Long version;
+    private Integer version;
+    private EntryStateType state = EntryStateType.PENDING;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator="entry_id_seq")
@@ -72,11 +73,20 @@ public class Entry {
     }
 
     @Version
-    public Long getVersion() {
+    public Integer getVersion() {
         return version;
     }
 
-    public void setVersion(Long version) {
+    public void setVersion(Integer version) {
         this.version = version;
+    }
+
+    @Enumerated(EnumType.STRING)
+    public EntryStateType getState() {
+        return state;
+    }
+
+    public void setState(EntryStateType state) {
+        this.state = state;
     }
 }

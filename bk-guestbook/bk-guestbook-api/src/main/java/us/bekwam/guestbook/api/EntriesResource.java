@@ -13,12 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package us.bekwam.guestbook.rs;
+package us.bekwam.guestbook.api;
 
 import org.apache.commons.lang3.math.NumberUtils;
 import us.bekwam.guestbook.ejb.EntryBean;
-import us.bekwam.guestbook.entity.Entry;
+import us.bekwam.guestbook.domain.Entry;
 
+import javax.annotation.Resource;
 import javax.inject.Inject;
 import javax.validation.Valid;
 import javax.ws.rs.*;
@@ -33,12 +34,15 @@ import java.util.List;
 @Consumes(MediaType.APPLICATION_JSON)
 public class EntriesResource {
 
+    @Resource
+    private Integer recsPerPage;
+
     @Inject
     EntryBean entryBean;
 
     @GET
-    public List<Entry> getEntries(@QueryParam("page") @DefaultValue("0") String page_s) {
-        return entryBean.getEntries(NumberUtils.toInt(page_s));
+    public List<Entry> getEntries(@QueryParam("page") @DefaultValue("1") String page_s) {
+        return entryBean.getEntries(NumberUtils.toInt(page_s), recsPerPage);
     }
 
     @POST
