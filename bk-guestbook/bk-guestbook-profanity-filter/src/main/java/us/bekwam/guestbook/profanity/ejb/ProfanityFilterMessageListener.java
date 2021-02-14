@@ -21,11 +21,15 @@ import org.slf4j.LoggerFactory;
 import us.bekwam.guestbook.commons.messages.ProfanityFilterRequest;
 import us.bekwam.guestbook.commons.messages.ProfanityFilterResponse;
 import us.bekwam.guestbook.commons.messages.ProfanityFilterResponseType;
+import us.bekwam.guestbook.profanity.client.ProfanityFilterClient;
 import us.bekwam.guestbook.profanity.client.TestModeClient;
+import us.bekwam.guestbook.profanity.client.WebPurifyClient;
 
 import javax.annotation.Resource;
 import javax.ejb.ActivationConfigProperty;
+import javax.ejb.EJB;
 import javax.ejb.MessageDriven;
+import javax.inject.Inject;
 import javax.jms.*;
 
 /**
@@ -38,7 +42,7 @@ import javax.jms.*;
                 propertyValue = "Auto-acknowledge"),
         @ActivationConfigProperty(propertyName = "destinationType",
                 propertyValue = "javax.jms.Queue"),
-        @ActivationConfigProperty(propertyName="maxPoolSize", propertyValue="1")
+        @ActivationConfigProperty(propertyName="maxSession", propertyValue="1")
 })
 public class ProfanityFilterMessageListener implements MessageListener {
 
@@ -49,6 +53,9 @@ public class ProfanityFilterMessageListener implements MessageListener {
 
     @Resource(mappedName="java:/jms/queue/GuestbookInbound")
     Queue queue;
+
+    @Inject
+    ProfanityFilterClient webPurifyClient;
 
     @Override
     public void onMessage(Message message) {
@@ -63,27 +70,31 @@ public class ProfanityFilterMessageListener implements MessageListener {
                     (ProfanityFilterRequest)objectMessage.getObject();
             Message m = null;
 
+            ProfanityFilterClient client = null;
+
             switch(request.getMode()) {
-                case TEST:
-                    String result = new TestModeClient().filterText(request.getText());
-                    if( StringUtils.isEmpty(result) ) {
-                        ProfanityFilterResponse response =
-                                new ProfanityFilterResponse();
-                        response.setId(request.getId());
-                        response.setResponse(ProfanityFilterResponseType.ACCEPT);
-                        response.setExplanation("");
-                        m = session.createObjectMessage(response);
-                    } else {
-                        ProfanityFilterResponse response =
-                                new ProfanityFilterResponse();
-                        response.setId(request.getId());
-                        response.setResponse(ProfanityFilterResponseType.REJECT);
-                        response.setExplanation(result);
-                        m = session.createObjectMessage(response);
-                    }
-                    break;
                 case PRODUCTION:
-                    throw new UnsupportedOperationException("production not implemented yet");
+                    client = webPurifyClient;
+                    break;
+                default:
+                    client = new TestModeClient();
+            }
+
+            String result = client.filterText(request.getText());
+            if( StringUtils.isEmpty(result) ) {
+                ProfanityFilterResponse response =
+                        new ProfanityFilterResponse();
+                response.setId(request.getId());
+                response.setResponse(ProfanityFilterResponseType.ACCEPT);
+                response.setExplanation("");
+                m = session.createObjectMessage(response);
+            } else {
+                ProfanityFilterResponse response =
+                        new ProfanityFilterResponse();
+                response.setId(request.getId());
+                response.setResponse(ProfanityFilterResponseType.REJECT);
+                response.setExplanation(result);
+                m = session.createObjectMessage(response);
             }
 
             messageProducer.send( m );

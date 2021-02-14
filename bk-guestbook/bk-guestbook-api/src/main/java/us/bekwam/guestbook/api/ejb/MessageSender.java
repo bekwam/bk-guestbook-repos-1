@@ -19,6 +19,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import us.bekwam.guestbook.api.domain.Entry;
 import us.bekwam.guestbook.commons.messages.ProfanityFilterRequest;
+import us.bekwam.guestbook.commons.messages.ProfanityFilterRequestModeType;
 
 import javax.annotation.Resource;
 import javax.ejb.Stateless;
@@ -48,6 +49,7 @@ public class MessageSender {
         ) {
 
             ProfanityFilterRequest request = new ProfanityFilterRequest();
+            request.setMode(ProfanityFilterRequestModeType.PRODUCTION);
             request.setId( entry.getId() );
             request.setText( entry.getText() );
 
