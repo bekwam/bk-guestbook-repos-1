@@ -24,6 +24,7 @@ The code is deployable as a set of WARs running in the WildFly app server.  Post
 
 The following combination of DDL and DML is used to initialize the database.  A dedicated tablespace is used for the demo as are a pair of non-DBA accounts.
 
+```
 -- provision dba account
 CREATE TABLESPACE tbs_06 LOCATION '/var/lib/postgresql/data_06';
 
@@ -72,3 +73,4 @@ INSERT INTO bkg_config (id, name, value, version)
 VALUES (nextval('bkg_config_id_seq'), 'us.bekwam.guestbook.profanity.client.WebPurifyClient.url', 'http://api1.webpurify.com/services/rest/', 0);
 
 The "api_key" property inserted into the bkg_config table requires a valid API Key provided by WebPurify.
+```
