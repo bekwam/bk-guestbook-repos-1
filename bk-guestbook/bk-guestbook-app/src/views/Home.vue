@@ -41,20 +41,25 @@
     </footer>
     <div class="modal" :class="{ 'is-active': entryFormActive }">
       <div class="modal-background"></div>
-      <div class="modal-card">
+      <validation-observer tag="div" class="modal-card" v-slot="{ invalid }">
         <header class="modal-card-head">
           <p class="modal-card-title">We'd Love to Hear From You</p>
           <button class="delete" aria-label="close" @click="hideEntryForm"></button>
         </header>
         <section class="modal-card-body">
           <h2 class="subtitle">Add a Message For Us Below</h2>
-          <textarea class="textarea" v-model="entryText"/>
+          <validation-provider tag="div" class="field" v-slot="{errors, failed}" rules="required|max:1024">
+            <div class="control">
+              <textarea name="Message Text" class="textarea" v-model="entryText"/>
+            </div>
+            <p class="help is-danger" v-if="failed">{{ errors[0] }}</p>
+          </validation-provider>
         </section>
         <footer class="modal-card-foot">
-          <button class="button is-success" @click="saveEntryForm">Submit</button>
+          <button class="button is-success" @click="saveEntryForm" :disabled="invalid">Submit</button>
           <button class="button" @click="hideEntryForm">Cancel</button>
         </footer>
-      </div>
+      </validation-observer>
     </div>
   </base-layout>
 </template>
