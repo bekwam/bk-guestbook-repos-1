@@ -70,7 +70,21 @@ INSERT INTO bkg_config (id, name, value, version)
 VALUES (nextval('bkg_config_id_seq'), 'us.bekwam.guestbook.profanity.client.WebPurifyClient.api_key', 'api_key', 0);
 
 INSERT INTO bkg_config (id, name, value, version)
-VALUES (nextval('bkg_config_id_seq'), 'us.bekwam.guestbook.profanity.client.WebPurifyClient.url', 'http://api1.webpurify.com/services/rest/', 0);
+VALUES (nextval('bkg_config_id_seq'), 'us.bekwam.guestbook.profanity.client.WebPurifyClient.url', 
+        'http://api1.webpurify.com/services/rest/', 0);
 
 The "api_key" property inserted into the bkg_config table requires a valid API Key provided by WebPurify.
 ```
+
+### WildFly
+
+WildFly needs a datasource defined and a pair of JMS queues.  These are commands run using jboss-cli.sh. If running in DOMAIN mode, preface each command with "/profile=full" where "full" is the name of the profile equiped to run ActiveMQ.
+
+```
+/subsystem=datasources/data-source=GuestbookDS:add(jndi-name=java:jboss/datasources/GuestbookDS,driver-name=postgresql-42.2.10.jar,connection-url=jdbc:postgresql://localhost:5432/bk_guestbook,user-name=bkg_user,password=password,enabled=true,statistics-enabled=true)
+
+/subsystem=messaging-activemq/server=default/jms-queue=GuestbookInbound:add(entries=["java:/jms/queue/GuestbookInbound","java:jboss/exported/jms/queue/GuestbookInbound"])
+
+/subsystem=messaging-activemq/server=default/jms-queue=GuestbookOutbound:add(entries=["java:/jms/queue/GuestbookOutbound","java:jboss/exported/jms/queue/GuestbookOutbound"])
+```
+
