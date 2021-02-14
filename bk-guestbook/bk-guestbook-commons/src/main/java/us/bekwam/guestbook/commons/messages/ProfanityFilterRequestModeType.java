@@ -13,16 +13,14 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package us.bekwam.guestbook.domain;
+package us.bekwam.guestbook.commons.messages;
 
 /**
  * @author carl
  */
-public enum EntryStateType {
+public enum ProfanityFilterRequestModeType {
 
-    PENDING,
+    TEST,
 
-    APPROVED,
-
-    REJECTED
+    PRODUCTION
 }

@@ -13,14 +13,15 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package us.bekwam.guestbook.api;
-
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
+package us.bekwam.guestbook.commons.messages;
 
 /**
  * @author carl
  */
-@ApplicationPath("/api")
-public class APIApplication extends Application {
+public enum ProfanityFilterResponseType {
+    ACCEPT,
+
+    REJECT,
+
+    ERROR
 }

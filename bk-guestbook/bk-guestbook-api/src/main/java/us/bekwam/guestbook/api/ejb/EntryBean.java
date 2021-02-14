@@ -13,16 +13,20 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package us.bekwam.guestbook.ejb;
+package us.bekwam.guestbook.api.ejb;
 
-import us.bekwam.guestbook.domain.Entry;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import us.bekwam.guestbook.api.domain.Entry;
 
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import javax.persistence.TypedQuery;
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author carl
@@ -30,11 +34,16 @@ import java.util.List;
 @Stateless
 public class EntryBean {
 
+    private Logger log = LoggerFactory.getLogger(EntryBean.class);
+
     @PersistenceContext
     EntityManager em;
 
     public List<Entry> getEntries(int page, int nrecs) {
-        TypedQuery<Entry> q = em.createQuery("SELECT e FROM Entry e ORDER BY e.createdOn DESC", Entry.class );
+        TypedQuery<Entry> q = em.createQuery(
+                "SELECT e FROM Entry e WHERE e.state = us.bekwam.guestbook.api.domain.EntryStateType.APPROVED ORDER BY e.createdOn DESC",
+                Entry.class
+        );
         q.setFirstResult(page-1);
         q.setMaxResults(nrecs);
         return q.getResultList();
@@ -45,4 +54,17 @@ public class EntryBean {
         em.persist(e);
         return e;
     }
+
+    public Optional<Entry> findEntryById(Long id) {
+        try {
+            return Optional.of(em.find(Entry.class, id));
+        } catch(NoResultException exc) {
+            if( log.isDebugEnabled() ) {
+                log.debug("[FIND ENTRY] no entry record for id={}", id);
+            }
+        }
+        return Optional.empty();
+    }
+
+    public void updateEntry(Entry e) { }
 }

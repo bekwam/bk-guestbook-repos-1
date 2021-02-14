@@ -6,7 +6,7 @@
          version="4.0">
 
     <env-entry>
-        <env-entry-name>us.bekwam.guestbook.api.EntriesResource/recsPerPage</env-entry-name>
+        <env-entry-name>us.bekwam.guestbook.api.rs.EntriesResource/recsPerPage</env-entry-name>
         <env-entry-type>java.lang.Integer</env-entry-type>
         <env-entry-value>25</env-entry-value>
     </env-entry>

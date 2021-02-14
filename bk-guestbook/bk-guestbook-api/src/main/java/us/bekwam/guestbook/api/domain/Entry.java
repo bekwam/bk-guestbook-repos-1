@@ -13,7 +13,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package us.bekwam.guestbook.domain;
+package us.bekwam.guestbook.api.domain;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
