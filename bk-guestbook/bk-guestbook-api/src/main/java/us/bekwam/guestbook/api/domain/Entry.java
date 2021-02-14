@@ -17,6 +17,7 @@ package us.bekwam.guestbook.api.domain;
 
 import javax.persistence.*;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 
 /**
  * @author carl
@@ -34,6 +35,8 @@ public class Entry {
     private ZonedDateTime createdOn;
     private Integer version;
     private EntryStateType state = EntryStateType.PENDING;
+
+    private String entryDate;
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE,generator="entry_id_seq")
@@ -88,5 +91,13 @@ public class Entry {
 
     public void setState(EntryStateType state) {
         this.state = state;
+    }
+
+    @Transient
+    public String getEntryDate() {
+        if( this.createdOn != null ) {
+            return this.createdOn.format(DateTimeFormatter.ISO_OFFSET_DATE_TIME);
+        }
+        return null;
     }
 }

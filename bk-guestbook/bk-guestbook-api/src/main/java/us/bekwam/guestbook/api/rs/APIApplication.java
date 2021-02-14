@@ -21,6 +21,6 @@ import javax.ws.rs.core.Application;
 /**
  * @author carl
  */
-@ApplicationPath("/api")
+@ApplicationPath("/")
 public class APIApplication extends Application {
 }
