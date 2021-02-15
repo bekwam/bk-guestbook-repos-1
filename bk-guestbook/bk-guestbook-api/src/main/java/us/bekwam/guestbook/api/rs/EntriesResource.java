@@ -28,7 +28,9 @@ import javax.validation.Valid;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author carl
@@ -48,6 +50,18 @@ public class EntriesResource {
 
     @Inject
     MessageSender messageSender;
+
+    @GET
+    @Path("/numPages")
+    public Map<String, Long> getNumPages() {
+        Long nrecs = entryBean.getNumApprovedRecs();
+        Long npages = nrecs / recsPerPage;
+        if( nrecs % recsPerPage > 0 ) {
+            npages++;
+        }
+        Map<String, Long> retval = Map.of("numPages", npages);
+        return retval;
+    }
 
     @GET
     public List<Entry> getEntries(@QueryParam("page") @DefaultValue("1") String page_s) {

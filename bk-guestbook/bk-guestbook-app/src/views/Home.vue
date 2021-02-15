@@ -1,5 +1,5 @@
 <template>
-  <base-layout>
+  <base-layout class="mt-4">
     <div class="level mb-4">
       <div class="level-left">
         <div class="level-item">

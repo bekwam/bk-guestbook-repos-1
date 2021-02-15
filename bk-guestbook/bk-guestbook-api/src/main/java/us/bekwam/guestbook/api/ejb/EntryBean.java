@@ -39,6 +39,14 @@ public class EntryBean {
     @PersistenceContext
     EntityManager em;
 
+    public Long getNumApprovedRecs() {
+        TypedQuery<Long> nrecs = em.createQuery(
+                "SELECT COUNT(e) FROM Entry e WHERE e.state = us.bekwam.guestbook.api.domain.EntryStateType.APPROVED",
+                Long.class
+        );
+        return nrecs.getSingleResult();
+    }
+
     public List<Entry> getEntries(int page, int nrecs) {
         TypedQuery<Entry> q = em.createQuery(
                 "SELECT e FROM Entry e WHERE e.state = us.bekwam.guestbook.api.domain.EntryStateType.APPROVED ORDER BY e.createdOn DESC",
