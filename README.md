@@ -1,5 +1,7 @@
 # bk-guestbook-repos-1
-Repository for Bekwam Guestbook software architecture demo
+Repository for the Bekwam Guestbook Model Based Software Engineering (MBSE) demo
+
+Check [The Wiki](https://github.com/bekwam/bk-guestbook-repos-1/wiki) for detailed project information.
 
 The demo presents UML modeling techniques for analysis and design with a fully-implemented example..  The goal of the modeling is twofold:
 
