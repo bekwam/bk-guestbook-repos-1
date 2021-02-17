@@ -5,20 +5,24 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
-    entries: [],
     loading: false,
-    lastStatus: null
+    lastStatus: null,
+    recsPerPage: 5,
+    numPages: 1,
+    pages: []
   },
   mutations: {
     SET_LOADING: (state,loading) => state.loading = loading,
-    SET_ENTRIES: (state,entries) => state.entries = entries,
-    SET_LAST_STATUS: (state,lastStatus) => state.lastStatus = lastStatus
+    SET_LAST_STATUS: (state,lastStatus) => state.lastStatus = lastStatus,
+    SET_RECS_PER_PAGE: (state, recsPerPage) => state.recsPerPage = recsPerPage,
+    SET_NUM_PAGES: (state, numPages) => state.numPages = numPages,
+    SET_PAGE: (state, page) => Vue.set(state.pages, page.pageNo-1, page) // 0-based storage
   },
   actions: {
-    async fetchEntries({commit}) {
-      let response = await fetch(process.env.VUE_APP_API_URL + "/entries");
+    async fetchEntries({commit},page) {
+      let response = await fetch(process.env.VUE_APP_API_URL + "/entries?page=" + page);
       let data = await response.json();
-      commit("SET_ENTRIES", data);
+      commit("SET_PAGE", { pageNo: page, entries: data});
     },
     async addEntry({commit}, entryText) {
       commit("SET_LAST_STATUS", null);
@@ -30,6 +34,20 @@ export default new Vuex.Store({
         body: JSON.stringify({ "text": entryText })
       });
       commit("SET_LAST_STATUS", response.lastStatus);
+    },
+    async fetchPagingInfo({commit}) {
+      const response = await fetch(process.env.VUE_APP_API_URL + "/entries/pagingInfo");
+      let data = await response.json();
+      commit("SET_RECS_PER_PAGE", data.recsPerPage);
+      commit("SET_NUM_PAGES", data.numPages);
+    }
+  },
+  getters: {
+    getEntries: state => pageNo => {
+      if( state.pages[pageNo-1] ) {
+        return state.pages[pageNo-1].entries; // 0-based retrieval
+      }
+      return null;
     }
   }
 })

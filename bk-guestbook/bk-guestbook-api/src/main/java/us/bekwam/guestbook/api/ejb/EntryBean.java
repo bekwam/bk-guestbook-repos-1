@@ -47,13 +47,13 @@ public class EntryBean {
         return nrecs.getSingleResult();
     }
 
-    public List<Entry> getEntries(int page, int nrecs) {
+    public List<Entry> getEntries(int page, int recsPerPage) {
         TypedQuery<Entry> q = em.createQuery(
                 "SELECT e FROM Entry e WHERE e.state = us.bekwam.guestbook.api.domain.EntryStateType.APPROVED ORDER BY e.createdOn DESC",
                 Entry.class
         );
-        q.setFirstResult(page-1);
-        q.setMaxResults(nrecs);
+        q.setFirstResult((page-1)*recsPerPage);
+        q.setMaxResults(recsPerPage);
         return q.getResultList();
     }
 

@@ -52,14 +52,17 @@ public class EntriesResource {
     MessageSender messageSender;
 
     @GET
-    @Path("/numPages")
-    public Map<String, Long> getNumPages() {
+    @Path("/pagingInfo")
+    public Map<String, Long> getPagingInfo() {
         Long nrecs = entryBean.getNumApprovedRecs();
         Long npages = nrecs / recsPerPage;
         if( nrecs % recsPerPage > 0 ) {
             npages++;
         }
-        Map<String, Long> retval = Map.of("numPages", npages);
+        Map<String, Long> retval = Map.of(
+                "numPages", npages,
+                "recsPerPage", recsPerPage.longValue()
+        );
         return retval;
     }
 
