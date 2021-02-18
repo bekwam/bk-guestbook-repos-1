@@ -10,7 +10,7 @@
         </div>
       </div>
       <div class="level-right">
-        <button class="level-item button is-success" @click="showEntryForm">Add A Message</button>
+        <button class="level-item button is-success" @click="toggleEntryModal(true)">Add A Message</button>
       </div>
     </div>
     <div class="notification" 
@@ -56,39 +56,21 @@
         Brought to you by Bekwam, Inc &bull; <a href="https://www.bekwam.com">https://www.bekwam.com</a>
       </p>
     </footer>
-    <div class="modal" :class="{ 'is-active': entryFormActive }">
-      <div class="modal-background"></div>
-      <validation-observer tag="div" class="modal-card" v-slot="{ invalid, reset }">
-        <header class="modal-card-head">
-          <p class="modal-card-title">We'd Love to Hear From You</p>
-          <button class="delete" aria-label="close" @click="hideEntryForm(reset)"></button>
-        </header>
-        <section class="modal-card-body">
-          <h2 class="subtitle">Add a Message For Us Below</h2>
-          <validation-provider tag="div" class="field" v-slot="{errors, failed}" rules="required|max:1024">
-            <div class="control">
-              <textarea name="Message Text" class="textarea" v-model="entryText"/>
-            </div>
-            <p class="help is-danger" v-if="failed">{{ errors[0] }}</p>
-          </validation-provider>
-        </section>
-        <footer class="modal-card-foot">
-          <button class="button is-success" @click="saveEntryForm(reset)" :disabled="invalid">Submit</button>
-          <button class="button" @click="hideEntryForm(reset)">Cancel</button>
-        </footer>
-      </validation-observer>
-    </div>
+    <entry-modal :isActive="entryFormActive" @update-is-active="toggleEntryModal(false)" @update-entry-text="saveEntryForm" />
   </base-layout>
 </template>
 
 <script>
 import BaseLayout from "@/layout/BaseLayout.vue";
 import { mapState, mapActions, mapGetters } from "vuex";
+import EntryModal from "./EntryModal.vue";
+import HomeController from "./HomeController";
 
 export default {
   name: 'home',
   components: {
-    BaseLayout
+    BaseLayout,
+    EntryModal
   },
   data() {
     return {
@@ -96,8 +78,7 @@ export default {
       notification: null,
       notificationType: null,
       notificationActive: false,
-      progressActive: false,
-      entryText: null
+      progressActive: false
     }
   },
   computed: {
@@ -125,25 +106,19 @@ export default {
       }
       this.$router.push({ name: "home", query: { page: pageNo }});
     },
-    showEntryForm() {
-      this.entryFormActive = true;
+    toggleEntryModal(show) {
+      this.entryFormActive = show;
     },
-    hideEntryForm(resetValidation) {
-      this.entryText = null;
-      resetValidation();
-      this.entryFormActive = false;      
-    },
-    async saveEntryForm(resetValidation) {
-      this.showProgress();
+    async saveEntryForm(entryText) {
+      this.toggleProgress(true);
       try {
-        await this.addEntry(this.entryText);
+        await this.addEntry(entryText);
         this.showNotification("Thanks for posting. Your message is being reviewed and will be available shortly.");
       } catch(e) {
         this.showNotification(e, "error");
       }
-      resetValidation();
-      this.hideProgress();
-      this.hideEntryForm(resetValidation);
+      this.toggleProgress(false);
+      this.toggleEntryModal(false);
     },
     showNotification(text, type) {
       this.notification = text;
@@ -157,33 +132,20 @@ export default {
       this.notificationType = null;
       this.notificationActive = false;
     },
-    showProgress() {
-      this.progressActive = true;
+    toggleProgress(show) {
+      this.progressActive = show;
     },
-    hideProgress() {
-      this.progressActive = false;
-    },
-    async loadPage(vm,toPage) {
-      vm.showProgress();
+    async loadPage(toPage) {
+      this.toggleProgress(true);
       try {
-        await vm.fetchPagingInfo();
-        await vm.fetchEntries(toPage);
+        await this.fetchPagingInfo();
+        await this.fetchEntries(toPage);
       } catch(e) {
-        vm.showNotification(e, "error");
+        this.showNotification(e, "error");
       }
-      vm.hideProgress();
+      this.toggleProgress(false);
     }
   },
-  beforeRouteEnter(to,from,next) {
-    if( !to.query.page ) {
-      next({ name: "home", query: { page: 1 }});
-      return;
-    }
-    next(vm => vm.loadPage(vm, to.query.page));
-  },
-  async beforeRouteUpdate(to,from,next) {
-    await this.loadPage(this, to.query.page);
-    next();
-  }
+  ...HomeController
 }
 </script>
