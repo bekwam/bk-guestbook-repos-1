@@ -1,9 +1,16 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
+import LogRocket from 'logrocket';
+import createPlugin from 'logrocket-vuex';
 
 Vue.use(Vuex)
 
+LogRocket.init('ynlrws/bkguestbook');
+
+const logrocketPlugin = createPlugin(LogRocket);
+
 export default new Vuex.Store({
+  plugins: [logrocketPlugin],
   state: {
     loading: false,
     lastStatus: null,

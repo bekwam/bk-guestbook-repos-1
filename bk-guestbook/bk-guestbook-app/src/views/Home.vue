@@ -19,14 +19,10 @@
       <button class="delete" @click="hideNotification"></button>
       {{ notification }}
     </div>
-    <div class="card mb-4" v-for="entry in getEntries($route.query.page)" :key="entry.id">    
-      <div class="card-content">      
-        <div class="media">
-          <div class="media-content">
-            <h6 class="subtitle is-6">{{ new Date(entry.entryDate).toLocaleDateString() }}</h6>
-          </div>
-        </div>
-        <p class="content">{{ entry.text }}</p>
+    <div class="message mb-4" v-for="entry in getEntries($route.query.page)" :key="entry.id">    
+      <div class="message-body">      
+        <h6 class="subtitle is-size-7">{{ new Date(entry.entryDate).toLocaleDateString() }}</h6>
+        <p class="content is-size-5">{{ entry.text }}</p>
       </div>
     </div>
     <nav class="pagination" role="navigation" aria-label="pagination">
@@ -55,7 +51,6 @@
       </ul>
 
     </nav>
-    <hr />
     <footer class="footer">
       <p class="content">
         Brought to you by Bekwam, Inc &bull; <a href="https://www.bekwam.com">https://www.bekwam.com</a>

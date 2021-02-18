@@ -5,7 +5,6 @@ import store from './store'
 import { ValidationProvider, ValidationObserver, extend } from "vee-validate";
 import { required, max } from "vee-validate/dist/rules";
 
-
 Vue.config.productionTip = false
 
 Vue.component("validation-observer", ValidationObserver);
