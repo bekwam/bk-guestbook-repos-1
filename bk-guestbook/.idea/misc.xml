@@ -3,6 +3,7 @@
   <component name="ExternalStorageConfigurationManager" enabled="true" />
   <component name="FrameworkDetectionExcludesConfiguration">
     <file type="web" url="file://$PROJECT_DIR$/bk-guestbook-api" />
+    <file type="web" url="file://$PROJECT_DIR$/bk-guestbook-app" />
     <file type="web" url="file://$PROJECT_DIR$/bk-guestbook-profanity-filter" />
   </component>
   <component name="MavenProjectsManager">

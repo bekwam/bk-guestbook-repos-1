@@ -7,11 +7,12 @@
     <groupId>us.bekwam</groupId>
     <artifactId>bk-guestbook</artifactId>
     <packaging>pom</packaging>
-    <version>1.0-SNAPSHOT</version>
+    <version>1.0</version>
     <modules>
         <module>bk-guestbook-api</module>
         <module>bk-guestbook-profanity-filter</module>
         <module>bk-guestbook-commons</module>
+        <module>bk-guestbook-app</module>
     </modules>
 
     <properties>
