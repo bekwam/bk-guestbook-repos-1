@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/admin/Home.vue'
+import Admin from './views/admin/Admin.vue'
+import SysProp from "./views/admin/sysprop/SysProp.vue";
+import Entries from "./views/admin/entries/Entries.vue";
+import Users from "./views/admin/users/Users.vue";
 
 Vue.use(Router)
 
@@ -14,8 +17,29 @@ export default new Router({
     },
     {
       path: '/admin',
-      name: 'homeAdmin',
-      component: Home
+      name: 'admin',
+      component: Admin,
+      children: [
+        {
+          path: "",
+          redirect: "entries"
+        },
+        {
+          path: "entries",
+          name: "entries",
+          component: Entries
+        },
+        {
+          path: "users",
+          name: "users",
+          component: Users
+        },
+        {
+          path: "sysprop",
+          name: "sysprop",
+          component: SysProp
+        }
+      ]
     }
   ]
 })

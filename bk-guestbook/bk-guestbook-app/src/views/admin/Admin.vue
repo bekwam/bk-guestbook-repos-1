@@ -23,16 +23,21 @@
       <div class="column">
         <aside class="menu">
           <ul class="menu-list">
-            <li><a>Home</a></li>
-            <li><a>Users</a></li>
-            <li><a>System Properties</a></li>
+            <li><router-link :to="{ name: 'entries' }">Home</router-link></li>
+            <li><router-link :to="{ name: 'users' }">Users</router-link></li>
+            <li><router-link :to="{ name: 'sysprop' }">System Properties</router-link></li>
           </ul>
         </aside>
       </div>
       <div class="column">
-        <p>Post table here</p>
+        <router-view />
       </div>
     </div>
+    <footer class="footer">
+      <p class="content">
+        Brought to you by Bekwam, Inc &bull; <a href="https://www.bekwam.com">https://www.bekwam.com</a>
+      </p>
+    </footer>
   </base-layout>
 </template>
 <script>
