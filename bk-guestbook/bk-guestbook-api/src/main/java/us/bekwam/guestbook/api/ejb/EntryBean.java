@@ -15,10 +15,12 @@
  */
 package us.bekwam.guestbook.api.ejb;
 
+import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import us.bekwam.guestbook.api.domain.Entry;
 
+import javax.annotation.security.PermitAll;
 import javax.ejb.Stateless;
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
@@ -32,6 +34,8 @@ import java.util.Optional;
  * @author carl
  */
 @Stateless
+@SecurityDomain("BKGEJBSecurityDomain")
+@PermitAll
 public class EntryBean {
 
     private Logger log = LoggerFactory.getLogger(EntryBean.class);

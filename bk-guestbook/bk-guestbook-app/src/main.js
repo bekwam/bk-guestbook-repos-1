@@ -1,11 +1,12 @@
 import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
-import store from './store'
+import store from './store/index'
 import { ValidationProvider, ValidationObserver, extend } from "vee-validate";
 import { required, max } from "vee-validate/dist/rules";
 
 Vue.config.productionTip = false
+Vue.config.devtools = true;
 
 Vue.component("validation-observer", ValidationObserver);
 Vue.component("validation-provider", ValidationProvider);

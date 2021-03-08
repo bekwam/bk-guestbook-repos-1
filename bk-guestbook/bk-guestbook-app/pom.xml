@@ -48,7 +48,6 @@
                 </executions>
                 <configuration>
                     <executable>npm</executable>
-                    <workingDirectory>src/main/vuejs/build-demo</workingDirectory>
                     <arguments>
                         <argument>run</argument>
                         <argument>build</argument>

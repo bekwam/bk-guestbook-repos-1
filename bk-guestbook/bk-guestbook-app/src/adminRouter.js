@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import Home from './views/Home.vue'
+import Home from './views/admin/Home.vue'
 
 Vue.use(Router)
 
@@ -9,12 +9,12 @@ export default new Router({
   base: process.env.BASE_URL,
   routes: [
     {
-      path: "/index.html",
-      redirect: "/"
+      path: "/admin/index.html",
+      redirect: "/admin"
     },
     {
-      path: '/',
-      name: 'home',
+      path: '/admin',
+      name: 'homeAdmin',
       component: Home
     }
   ]

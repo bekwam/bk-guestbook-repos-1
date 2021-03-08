@@ -10,4 +10,31 @@
         <env-entry-type>java.lang.Integer</env-entry-type>
         <env-entry-value>5</env-entry-value>
     </env-entry>
+
+    <security-constraint>
+        <web-resource-collection>
+            <web-resource-name>Protected Logout Page</web-resource-name>
+            <url-pattern>/logout</url-pattern>
+        </web-resource-collection>
+        <auth-constraint>
+            <role-name>superuser</role-name>
+        </auth-constraint>
+    </security-constraint>
+    <security-role>
+        <role-name>superuser</role-name>
+    </security-role>
+    <login-config>
+        <auth-method>FORM</auth-method>
+        <realm-name>GuestbookRealm</realm-name>
+        <form-login-config>
+            <form-login-page>/login.html</form-login-page>
+            <form-error-page>/loginError.html</form-error-page>
+        </form-login-config>
+    </login-config>
+
+    <mime-mapping>
+        <extension>css</extension>
+        <mime-type>text/css</mime-type>
+    </mime-mapping>
+
 </web-app>

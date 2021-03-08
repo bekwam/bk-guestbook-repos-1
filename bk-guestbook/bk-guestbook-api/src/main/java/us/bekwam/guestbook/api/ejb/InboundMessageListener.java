@@ -15,12 +15,14 @@
  */
 package us.bekwam.guestbook.api.ejb;
 
+import org.jboss.ejb3.annotation.SecurityDomain;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import us.bekwam.guestbook.api.domain.Entry;
 import us.bekwam.guestbook.api.domain.EntryStateType;
 import us.bekwam.guestbook.commons.messages.ProfanityFilterResponse;
 
+import javax.annotation.security.PermitAll;
 import javax.ejb.ActivationConfigProperty;
 import javax.ejb.MessageDriven;
 import javax.inject.Inject;
@@ -41,6 +43,8 @@ import java.util.Optional;
         @ActivationConfigProperty(propertyName = "destinationType",
                 propertyValue = "javax.jms.Queue")
 })
+@SecurityDomain("BKGEJBSecurityDomain")
+@PermitAll
 public class InboundMessageListener implements MessageListener {
 
     private Logger log = LoggerFactory.getLogger(InboundMessageListener.class);

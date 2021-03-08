@@ -10,6 +10,7 @@
         </div>
       </div>
       <div class="level-right">
+        <a class="level-item" href="admin">Admin</a>
         <button class="level-item button is-success" @click="toggleEntryModal(true)">Add A Message</button>
       </div>
     </div>
