@@ -3,6 +3,7 @@ import Vuex from 'vuex'
 import LogRocket from 'logrocket';
 import createPlugin from 'logrocket-vuex';
 import UsersModule from "./modules/users";
+import SysPropsModule from "./modules/sysprops";
 
 Vue.use(Vuex)
 
@@ -13,7 +14,8 @@ const logrocketPlugin = createPlugin(LogRocket);
 export default new Vuex.Store({
   plugins: [logrocketPlugin],
   modules: {
-    users: UsersModule
+    users: UsersModule,
+    sysprops: SysPropsModule
   },
   state: {
     loading: false,

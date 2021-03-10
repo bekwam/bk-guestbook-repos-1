@@ -25,7 +25,7 @@
           <ul class="menu-list">
             <li><router-link :to="{ name: 'entries' }">Home</router-link></li>
             <li><router-link :to="{ name: 'users' }">Users</router-link></li>
-            <li><router-link :to="{ name: 'sysprop' }">System Properties</router-link></li>
+            <li><router-link :to="{ name: 'sysprops' }">System Properties</router-link></li>
           </ul>
         </aside>
       </div>

@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import Admin from './views/admin/Admin.vue'
-import SysProp from "./views/admin/sysprop/SysProp.vue";
+import SysProps from "./views/admin/sysprops/SysProps.vue";
 import Entries from "./views/admin/entries/Entries.vue";
 import Users from "./views/admin/users/Users.vue";
 
@@ -10,6 +10,7 @@ Vue.use(Router)
 export default new Router({
   mode: 'history',
   base: process.env.BASE_URL,
+  linkActiveClass: "is-active",
   routes: [
     {
       path: "/admin/index.html",
@@ -35,9 +36,9 @@ export default new Router({
           component: Users
         },
         {
-          path: "sysprop",
-          name: "sysprop",
-          component: SysProp
+          path: "sysprops",
+          name: "sysprops",
+          component: SysProps
         }
       ]
     }
