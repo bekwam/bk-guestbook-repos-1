@@ -51,7 +51,7 @@ export default {
       this.value = null;
       this.$emit("update-is-active", false);
     },
-    async saveSysPropForm(resetValidation) {
+    saveSysPropForm(resetValidation) {
       this.$emit("update-sys-prop", { name: this.name, value: this.value });
       this.hideSysPropForm(resetValidation);
     },

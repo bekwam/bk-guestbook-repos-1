@@ -5,7 +5,11 @@ export default {
     },
     mutations: {
         SET_SYSPROPS: (state, sysprops) => state.sysprops = sysprops,
-        ADD_SYSPROP: (state, sysprop) => state.sysprops.push( sysprop )
+        ADD_SYSPROP: (state, sysprop) => state.sysprops.push( sysprop ),
+        DELETE_SYSPROP: (state, id) => {
+            let idx = state.sysprops.find( sp => sp.id == id );
+            state.sysprops.splice(idx, 1);
+        }
     },
     actions: {
         async fetchSysProps({commit}) {
@@ -24,6 +28,13 @@ export default {
             let id = await response.text();
             prop.id = id;
             commit("ADD_SYSPROP", prop);
+        },
+        async deleteSysProp({commit}, {id}) {
+            await fetch(
+                process.env.VUE_APP_API_URL + "/config/" + id,
+                { method: "DELETE" }
+                );
+            commit("DELETE_SYSPROP", id);
         }
     }
 };
