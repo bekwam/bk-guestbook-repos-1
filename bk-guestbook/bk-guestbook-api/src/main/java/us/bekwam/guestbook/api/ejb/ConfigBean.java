@@ -45,7 +45,22 @@ public class ConfigBean {
         return config.getId();
     }
 
-    public void update(Config config) {}
+    public void update(Config config) {
+        if( log.isDebugEnabled() ) {
+            log.debug("[UPDATE] updating config record id={}", config.getId());
+        }
+        Config fromDB = em.find(Config.class, config.getId());
+        if( fromDB != null ) {
+            if( log.isDebugEnabled() ) {
+                log.debug("[UPDATE] found id={} in db", config.getId());
+                log.debug("[UPDATE] updating value to {}", config.getValue());
+            }
+            fromDB.setName(config.getName());
+            fromDB.setValue(config.getValue());
+        } else {
+            log.warn("[UPDATE] config record not found for id={}", config.getId());
+        }
+    }
 
     public void delete(Long id) { em.remove(em.find(Config.class, id)); }
 

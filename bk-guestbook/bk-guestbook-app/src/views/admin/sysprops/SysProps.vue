@@ -3,7 +3,10 @@
     <div class="level">
       <div class="level-left">
         <div class="level-item buttons">
-          <button class="button" @click="toggleSysPropModal(true)">Add Property</button>
+          <button class="button"
+                  @click="setSysPropModal({ show: true, title: 'Add System Property',id: null, name: null, value: null })">
+                    Add Property
+          </button>
         </div>
       </div>
     </div>
@@ -21,18 +24,26 @@
           <td>{{ sysprop.value }}</td>
           <td>
             <span class="icon">
-              <font-awesome-icon class="mr-4" icon="edit" />
+              <font-awesome-icon
+                  class="mr-4"
+                  icon="edit"
+                  @click="setSysPropModal({ show: true, title: 'Edit System Property', id: sysprop.id, name: sysprop.name, value: sysprop.value })"
+              />
               <font-awesome-icon
                   class="has-text-danger"
                   icon="trash"
-                  @click="setSysPropModalDelete({ id: sysprop.id, name: sysprop.name, show: true })"
+                  @click="setSysPropModalDelete({ show: true, id: sysprop.id, name: sysprop.name })"
               />
             </span>
           </td>
         </tr>
       </tbody>
     </table>
-    <sys-prop-modal :isActive="sysPropFormActive" @update-is-active="toggleSysPropModal(false)" @update-sys-prop="saveSysPropForm" />
+    <sys-prop-modal
+        :isActive="sysPropFormActive"
+        :title="sysPropFormTitle"
+        :value="sysPropToEdit"
+        @save-sys-prop="saveSysPropForm" />
     <sys-prop-modal-delete
         :isActive="sysPropModalDelete"
         :value="sysPropToDelete"
@@ -51,17 +62,21 @@ export default {
   },
   data() {
     return {
+      sysPropFormTitle: "",
       sysPropFormActive: false,
       sysPropModalDelete: false,
       sysPropToDelete: null,
+      sysPropToEdit: null,
       modalLoading: false,
       modalErrorMessage: null
     };
   },
   methods: {
-    ...mapActions("sysprops", ["fetchSysProps","addSysProp","deleteSysProp"]),
-    toggleSysPropModal(val) {
-      this.sysPropFormActive = val;
+    ...mapActions("sysprops", ["fetchSysProps","addSysProp","deleteSysProp","updateSysProp"]),
+    setSysPropModal({show, title, name, value, id}) {
+      this.sysPropFormActive = show;
+      this.sysPropFormTitle = title;
+      this.sysPropToEdit = { name, value, id };
     },
     setSysPropModalDelete({ show, name, id }) {
       this.sysPropModalDelete = show;
@@ -80,8 +95,24 @@ export default {
       }
       this.setSysPropModalDelete({ name: null, id: null, show: false });
     },
-    async saveSysPropForm(prop) {
-      await this.addSysProp(prop);
+    async saveSysPropForm({confirmed, id, name, value}) {
+      if(confirmed) {
+        let operation = "adding";
+        try {
+          this.modalLoading = true;
+          if (id) {
+            operation = "editing";
+            await this.updateSysProp({id, name, value});
+          } else {
+            await this.addSysProp({name, value});
+          }
+        } catch (e) {
+          this.modalErrorMessage = `Error ${operation} System Property; ${e}`;
+        } finally {
+          this.modalLoading = false;
+        }
+      }
+      this.sysPropFormActive = false;
     }
   },
   beforeRouteEnter(to,from,next) {

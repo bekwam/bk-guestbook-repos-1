@@ -1,7 +1,7 @@
 <template>
   <div class="modal" :class="{ 'is-active': isActive }">
     <div class="modal-background"></div>
-    <validation-observer tag="div" class="modal-card" v-slot="{ invalid, reset }">
+    <div class="modal-card" v-slot="{ invalid, reset }">
       <header class="modal-card-head">
         <p class="modal-card-title">Delete System Property</p>
         <button class="delete" aria-label="close" @click="cancelDelete()"></button>
@@ -16,11 +16,11 @@
         </p>
       </section>
       <footer class="modal-card-foot">
-        <button class="button is-danger" @click="confirmDelete()" :disabled="invalid">Yes, I Understand</button>
+        <button class="button is-danger" @click="confirmDelete()">Yes, I Understand</button>
         <button class="button" @click="cancelDelete()">Cancel</button>
         <progress class="progress" v-if="loadingFlag" />
       </footer>
-    </validation-observer>
+    </div>
   </div>
 </template>
 <script>

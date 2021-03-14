@@ -7,8 +7,17 @@ export default {
         SET_SYSPROPS: (state, sysprops) => state.sysprops = sysprops,
         ADD_SYSPROP: (state, sysprop) => state.sysprops.push( sysprop ),
         DELETE_SYSPROP: (state, id) => {
-            let idx = state.sysprops.find( sp => sp.id == id );
-            state.sysprops.splice(idx, 1);
+            let idx = state.sysprops.findIndex( sp => sp.id == id );
+            if( idx != -1 ) {
+                state.sysprops.splice(idx, 1);
+            }
+        },
+        UPDATE_SYSPROP: (state, sysprop) => {
+            let sp = state.sysprops.find( sp => sp.id == sysprop.id );
+            if( sp ) {
+                sp.name = sysprop.name;
+                sp.value = sysprop.value;
+            }
         }
     },
     actions: {
@@ -35,6 +44,16 @@ export default {
                 { method: "DELETE" }
                 );
             commit("DELETE_SYSPROP", id);
+        },
+        async updateSysProp({commit}, prop) {
+            await fetch( process.env.VUE_APP_API_URL + "/config/" + prop.id, {
+                method: "PUT",
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(prop)
+            });
+            commit("UPDATE_SYSPROP", prop);
         }
     }
 };

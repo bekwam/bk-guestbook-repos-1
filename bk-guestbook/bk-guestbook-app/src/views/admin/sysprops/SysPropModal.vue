@@ -3,7 +3,7 @@
     <div class="modal-background"></div>
     <validation-observer tag="div" class="modal-card" v-slot="{ invalid, reset }">
       <header class="modal-card-head">
-        <p class="modal-card-title">Add System Property</p>
+        <p class="modal-card-title">{{ title }}</p>
         <button class="delete" aria-label="close" @click="hideSysPropForm(reset)"></button>
       </header>
       <section class="modal-card-body">
@@ -17,7 +17,7 @@
         <validation-provider tag="div" class="field" v-slot="{errors, failed}" rules="required|max:1024">
           <label class="label">Value</label>
           <div class="control">
-            <input type="text" class="input" name="Value" v-model="value"/>
+            <input type="text" class="input" name="Value" v-model="propValue"/>
           </div>
           <p class="help is-danger" v-if="failed">{{ errors[0] }}</p>
         </validation-provider>
@@ -36,24 +36,46 @@ export default {
     isActive: {
       required: true,
       type: Boolean
+    },
+    title: {
+      required: true,
+      type: String
+    },
+    value: {
+      required: true,
+      type: Object
     }
   },
   data() {
     return {
+      id: null,
       name: null,
-      value: null
+      propValue: null
     };
   },
+  watch: {
+    value(val) {
+      if( val ) {
+        this.id = val.id;
+        this.name = val.name;
+        this.propValue = val.value;
+      }
+    }
+  },
   methods: {
-    hideSysPropForm(resetValidation) {
+    resetForm(resetValidation) {
       resetValidation();
+      this.id = null;
       this.name = null;
-      this.value = null;
-      this.$emit("update-is-active", false);
+      this.propValue = null;
+    },
+    hideSysPropForm(resetValidation) {
+      this.resetForm(resetValidation);
+      this.$emit("save-sys-prop", { confirmed: false, id: this.id, name: this.name, value: this.propValue });
     },
     saveSysPropForm(resetValidation) {
-      this.$emit("update-sys-prop", { name: this.name, value: this.value });
-      this.hideSysPropForm(resetValidation);
+      this.$emit("save-sys-prop", {confirmed: true, id: this.id, name: this.name, value: this.propValue});
+      this.resetForm(resetValidation);
     },
   }
 };

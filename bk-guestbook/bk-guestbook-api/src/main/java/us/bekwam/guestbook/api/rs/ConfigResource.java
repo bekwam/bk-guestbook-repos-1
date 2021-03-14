@@ -15,6 +15,8 @@
  */
 package us.bekwam.guestbook.api.rs;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import us.bekwam.guestbook.api.domain.Config;
 import us.bekwam.guestbook.api.ejb.ConfigBean;
 
@@ -31,6 +33,8 @@ import java.util.List;
 @Produces(MediaType.APPLICATION_JSON)
 public class ConfigResource {
 
+    private Logger log = LoggerFactory.getLogger(ConfigResource.class);
+
     @Inject
     ConfigBean configBean;
 
@@ -43,7 +47,11 @@ public class ConfigResource {
     @PUT
     @Path("/{id}")
     public void update(@PathParam("id") Long id, Config config) {
-        configBean.findById(id).ifPresent( cfg -> configBean.update(cfg) );
+        if( log.isDebugEnabled() ) {
+            log.debug("[UPDATE] updating config record id={}", id);
+        }
+        config.setId(id);
+        configBean.update(config);
     }
 
     @DELETE
